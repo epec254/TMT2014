@@ -6,7 +6,6 @@
 #include <math.h>
 
 //now we will declare your team name
-
 int core_id = 1; //change to your spark team ID (1 - 30)
 char *teamName = "TeamName"; //max length 20 characters!!!
 
