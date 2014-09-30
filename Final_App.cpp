@@ -13,17 +13,12 @@ char *teamName = "TeamName"; //max length 20 characters!!!
 //change XX in the code below to the pin number, e.g., D6, etc
 //(if your hardware team tells you thermostat is connected to D6 code would be as follows)
 //#define THERM_PIN   D6
-//button toggles
-#define COOL_BUTTON xx
-#define HEAT_BUTTON xx
-//LEDs within the buttons
-#define COOL_LED xx
-#define HEAT_LED xx
-//Thermometer
-#define THERM_PIN   xx
-//Motion sensor
-#define MOTION xx
-
+#define COOL_BUTTON D2
+#define HEAT_BUTTON D3
+#define MOTION D4
+#define COOL_LED D5
+#define HEAT_LED D6
+#define THERM_PIN   A7
 
 //static definitions to identify which pin belongs to which device
 //DO NOT CHANGE

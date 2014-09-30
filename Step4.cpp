@@ -6,6 +6,7 @@
 #include <math.h>
 
 //now we will declare your team name
+
 int core_id = 30; //change to your spark team ID (1 - 30)
 char *teamName = "TeamName"; //max length 20 characters!!!
 
@@ -21,9 +22,6 @@ char *teamName = "TeamName"; //max length 20 characters!!!
 #define HEAT_LED xx
 //Thermometer
 #define THERM_PIN   xx
-//Motion sensor
-#define MOTION xx
-
 
 //static definitions to identify which pin belongs to which device
 //DO NOT CHANGE
@@ -49,12 +47,6 @@ int desiredTemperature = 0;
 bool isHeatOn = false;
 //should the AC be on?
 bool isCoolOn = false;
-//is motion currently detected?
-bool motionDetected = false;
-//last time motion detected
-unsigned long lastMotionSensed = 0UL;
-//UNIX timestamp of last motion sense
-int lastMotionTimeStamp = 0;
 //to log data via google apps
 char logResult[200] = "";
 //to allow motion to only be published to the cloud once every 15 seconds
@@ -65,31 +57,11 @@ int lastHeatButtonState = 0;
 int lastCoolButtonState = 0;
 //to allow thermostat to turn on / off
 //true = on; false = off
-bool thermostatStatus = true;
+bool thermostatStatus = false;
 //status variable
 char statusString[100] = "";
-char *bcgStatus = "step5";
+char *bcgStatus = "step4";
 
-static const uint8_t on_motion[] = {
-    0b11111111,
-    0b00000000,
-    0b11101001,
-    0b10101101,
-    0b10101011,
-    0b11101001,
-    0b00000000,
-    0b11111111
-};
-
-static const uint8_t off_motion[] =
-{   0b11111111,
-    0b00000000,
-    0b11101111,
-    0b10101000,
-    0b10101111,
-    0b11101000,
-    0b00000000,
-    0b11111111 };
 
 static const uint8_t on_nomotion[] =
 {   0b00000000,
@@ -147,7 +119,6 @@ void setup()
     //allow status of heating & cooling & motion to be read from web interface
     Spark.variable("is_heat_on", &isHeatOn, BOOLEAN);
     Spark.variable("is_cool_on", &isCoolOn, BOOLEAN);
-    Spark.variable("motion", &motionDetected, BOOLEAN);
     
     //Variable that Google docs will read
     Spark.variable("log_data", &logResult, STRING);
@@ -166,9 +137,6 @@ void setup()
     //temp setting buttons recieve voltage (INPUT)
     pinMode(COOL_BUTTON, INPUT);
     pinMode(HEAT_BUTTON, INPUT);
-    
-    //motion senior recieves voltage (INPUT)
-    pinMode(MOTION, INPUT);
     
     //default LEDs to off
     digitalWrite(COOL_LED,LOW);
@@ -209,26 +177,6 @@ void loop()
         // cast to int (e.g., change 75.44 to 75)
         currentTemperature = round(doubleTemp);
     }
-    
-    //MOTION READING
-    motionReading = digitalRead(MOTION);
-    if (motionReading == HIGH) {
-        motionDetected = true;
-        //store last time sensed
-        lastMotionSensed = millis();
-        lastMotionTimeStamp = Time.now();
-        
-        //only publish every 15 seconds
-        unsigned long now = millis();
-        if ((now - lastMotionPublish)>15000UL) {
-            sprintf(idForPublishMotion, "%d", core_id);
-            Spark.publish("bcg-motion",idForPublishMotion);
-            lastMotionPublish = now;
-        }
-    } else {
-        motionDetected = false;
-    }
-    
     
     //BUTTONS FOR TEMP ADJUSTMENT
     heatButtonState = digitalRead(HEAT_BUTTON);
@@ -273,24 +221,16 @@ void loop()
         
     }
     
-    //DISPLAY STATUS & MOTION
+     //DISPLAY STATUS 
     matrix3.clear();
-    if (motionDetected == true && thermostatStatus == true) {
+    if (thermostatStatus == true) {
         //on & motion
-        matrix3.drawBitmap(0, 0, on_motion, 8, 8, LED_ON);
-    } else if (motionDetected == true && thermostatStatus == false) {
-        //off & motion
-        matrix3.drawBitmap(0, 0, off_motion, 8, 8, LED_ON);
-    } else if (motionDetected == false && thermostatStatus == true) {
-        //on & NO motion
         matrix3.drawBitmap(0, 0, on_nomotion, 8, 8, LED_ON);
-    } else if (motionDetected == false && thermostatStatus == false) {
-        //off & NO motion
+    } else if (thermostatStatus == false) {
+        //off & motion
         matrix3.drawBitmap(0, 0, off_nomotion, 8, 8, LED_ON);
-    }
+    } 
     matrix3.writeDisplay();
-    
-    
     
     //ADJUST THE HEATING / COOLING ELEMENTS
     isHeatOn = desiredTemperature > currentTemperature;
@@ -319,7 +259,7 @@ void loop()
     
     
     //logging result for Google
-    sprintf(logResult, "{\"id\":%d,\"team\":\"%s\",\"c_tmp\":%d,\"d_tmp\":%d,\"motion\":\"%s\",\"heat\":\"%s\",\"cool\":\"%s\",\"status\":\"%s\",\"last_motion\":%d,\"bcg_status\":\"%s\"}", core_id, teamName, currentTemperature, desiredTemperature, ((millis() - lastMotionSensed) < 30000UL)  ? "true" : "false", isHeatOn ? "true" : "false", isCoolOn ? "true" : "false", thermostatStatus ? "on" : "off", lastMotionTimeStamp, bcgStatus);
+    sprintf(logResult, "{\"id\":%d,\"team\":\"%s\",\"c_tmp\":%d,\"d_tmp\":%d,\"heat\":\"%s\",\"cool\":\"%s\",\"status\":\"%s\",\"bcg_status\":\"%s\"}", core_id, teamName, currentTemperature, desiredTemperature, isHeatOn ? "true" : "false", isCoolOn ? "true" : "false", thermostatStatus ? "on" : "off", bcgStatus);
     
     if (firstTimeOn = 1) {
         //placeholder for first time on
