@@ -14,15 +14,17 @@ char *teamName = "TeamName"; //max length 20 characters!!!
 //change XX in the code below to the pin number, e.g., D6, etc
 //(if your hardware team tells you thermostat is connected to D6 code would be as follows)
 //#define THERM_PIN   D6
-#define THERM_PIN   xx
+#define THERM_PIN   A7
+#define I2C_D xx
+#define I2C_C xx
+
 
 //static definitions to identify which pin belongs to which device
 //DO NOT CHANGE
 #define MATRIX1_I2C 0x70
 #define MATRIX2_I2C 0x71
 #define MATRIX3_I2C 0x72
-#define I2C_D D0
-#define I2C_C D1
+
 #define MAX_TEMP 40
 #define MIN_TEMP 0
 #define DESIRED_TEMP_FLASH_ADDRESS 0x80000

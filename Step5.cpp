@@ -22,7 +22,7 @@ char *teamName = "TeamName"; //max length 20 characters!!!
 //Thermometer
 #define THERM_PIN   A7
 //Motion sensor
-#define MOTION D4
+#define MOTION xx
 
 
 //static definitions to identify which pin belongs to which device
