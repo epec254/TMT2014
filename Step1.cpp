@@ -40,9 +40,7 @@ void loop()
     //DO NOT CHANGE
     static int firstTimeOn = 1;
     digitalWrite(D7, HIGH);   // Turn ON the LED
-    delay(1000);               // Wait for 1000mS = 1 second
-    digitalWrite(D7, LOW);    // Turn OFF the LED
-    delay(1000);               // Wait for 1 second
+
     
     //logging result for Google
     //TODO: Check if Google doc can read this partial set of strings

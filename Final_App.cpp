@@ -6,8 +6,8 @@
 #include <math.h>
 
 //now we will declare your team name
-int core_id = 30; //change to your spark team ID (1 - 30)
-char *teamName = "TeamName"; //max length 20 characters!!!
+int core_id = 1; //change to your spark team ID (1 - 30)
+char *teamName = "Edison"; //max length 20 characters!!!
 
 //now you need to ask your hardware team what PIN your different items are on 
 //change XX in the code below to the pin number, e.g., D6, etc
