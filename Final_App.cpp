@@ -7,18 +7,22 @@
 
 //now we will declare your team name
 int core_id = 1; //change to your spark team ID (1 - 30)
-char *teamName = "Edison"; //max length 20 characters!!!
+char *teamName = "Demo Unit"; //max length 20 characters!!!
 
 //now you need to ask your hardware team what PIN your different items are on 
 //change XX in the code below to the pin number, e.g., D6, etc
 //(if your hardware team tells you thermostat is connected to D6 code would be as follows)
 //#define THERM_PIN   D6
+//button toggles
 #define COOL_BUTTON D2
 #define HEAT_BUTTON D3
-#define MOTION D4
+//LEDs within the buttons
 #define COOL_LED D5
 #define HEAT_LED D6
+//Thermometer
 #define THERM_PIN   A7
+//Motion sensor
+#define MOTION D4
 
 //static definitions to identify which pin belongs to which device
 //DO NOT CHANGE
@@ -314,7 +318,7 @@ void loop()
     
     
     //logging result for Google
-    sprintf(logResult, "{\"id\":%d,\"team\":\"%s\",\"c_tmp\":%d,\"d_tmp\":%d,\"motion\":\"%s\",\"heat\":\"%s\",\"cool\":\"%s\",\"status\":\"%s\",\"last_motion\":%d,\"bcg_status\":\"%s\"}", core_id, teamName, currentTemperature, desiredTemperature, ((millis() - lastMotionSensed) < 30000UL)  ? "true" : "false", isHeatOn ? "true" : "false", isCoolOn ? "true" : "false", thermostatStatus ? "on" : "off", lastMotionTimeStamp, bcgStatus);
+    sprintf(logResult, "{\"id\":%d,\"team\":\"%s\",\"c_tmp\":%d,\"d_tmp\":%d,\"motion\":\"%s\",\"heat\":\"%s\",\"cool\":\"%s\",\"status\":\"%s\",\"last_motion\":%d,\"bcg_status\":\"%s\"}", core_id, teamName, currentTemperature, desiredTemperature, ((millis() - lastMotionSensed) < 5000UL)  ? "true" : "false", isHeatOn ? "true" : "false", isCoolOn ? "true" : "false", thermostatStatus ? "on" : "off", lastMotionTimeStamp, bcgStatus);
     
     if (firstTimeOn = 1) {
         //placeholder for first time on

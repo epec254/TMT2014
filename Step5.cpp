@@ -6,7 +6,7 @@
 #include <math.h>
 
 //now we will declare your team name
-int core_id = 30; //change to your spark team ID (1 - 30)
+int core_id = 1; //change to your spark team ID (1 - 30)
 char *teamName = "TeamName"; //max length 20 characters!!!
 
 //now you need to ask your hardware team what PIN your different items are on 
@@ -319,9 +319,9 @@ void loop()
     
     
     //logging result for Google
-    sprintf(logResult, "{\"id\":%d,\"team\":\"%s\",\"c_tmp\":%d,\"d_tmp\":%d,\"motion\":\"%s\",\"heat\":\"%s\",\"cool\":\"%s\",\"status\":\"%s\",\"last_motion\":%d,\"bcg_status\":\"%s\"}", core_id, teamName, currentTemperature, desiredTemperature, ((millis() - lastMotionSensed) < 30000UL)  ? "true" : "false", isHeatOn ? "true" : "false", isCoolOn ? "true" : "false", thermostatStatus ? "on" : "off", lastMotionTimeStamp, bcgStatus);
+    sprintf(logResult, "{\"id\":%d,\"team\":\"%s\",\"c_tmp\":%d,\"d_tmp\":%d,\"motion\":\"%s\",\"heat\":\"%s\",\"cool\":\"%s\",\"status\":\"%s\",\"last_motion\":%d,\"bcg_status\":\"%s\"}", core_id, teamName, currentTemperature, desiredTemperature, ((millis() - lastMotionSensed) < 5000UL)  ? "true" : "false", isHeatOn ? "true" : "false", isCoolOn ? "true" : "false", thermostatStatus ? "on" : "off", lastMotionTimeStamp, bcgStatus);
     
-    if (firstTimeOn = 1) {
+    if (firstTimeOn == 1) {
         //placeholder for first time on
         sprintf(statusString, "{\"id\":%d,\"team\":\"%s\",\"bcg_status\":\"%s\"}", core_id, teamName, bcgStatus);
         Spark.publish("bcg-status",statusString);

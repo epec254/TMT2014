@@ -6,7 +6,7 @@
 #include <math.h>
 
 //now we will declare your team name
-int core_id = 30; //change to your spark team ID (1 - 30)
+int core_id = 1; //change to your spark team ID (1 - 30)
 char *teamName = "TeamName"; //max length 20 characters!!!
 
 //now you need to ask your hardware team what PIN your thermostat is on 
@@ -75,7 +75,7 @@ void loop()
     //logging result for Google
     //TODO: Check if Google doc can read this partial set of strings
     sprintf(logResult, "{\"id\":%d,\"team\":\"%s\",\"c_tmp\":%d,\"bcg_status\":\"%s\",\"status\":\"%s\"}", core_id, teamName, currentTemperature, bcgStatus, thermostatStatus ? "on" : "off");
-       if (firstTimeOn = 1) {
+       if (firstTimeOn == 1) {
         sprintf(statusString, "{\"id\":%d,\"team\":\"%s\",\"bcg_status\":\"%s\"}", core_id, teamName, bcgStatus);
         Spark.publish("bcg-status",statusString);
         firstTimeOn = 0;
