@@ -6,8 +6,8 @@
 #include <math.h>
 
 //now we will declare your team name
-int core_id = 1; //change to your spark team ID (1 - 30)
-char *teamName = "TeamName"; //max length 20 characters!!!
+int core_id = 5; //change to your spark team ID (1 - 30)
+char *teamName = "Eric's team"; //max length 20 characters!!!
 
 //now you need to ask your hardware team what PIN your thermostat is on 
 //change XX in the code below to the pin number, e.g., D6, etc
@@ -96,6 +96,9 @@ void setup()
     //themometer pin recieves voltage (INPUT)
     pinMode(THERM_PIN, INPUT);
     
+    sprintf(statusString, "{\"id\":%d,\"team\":\"%s\",\"bcg_status\":\"%s\"}", core_id, teamName, bcgStatus);
+    Spark.publish("bcg-status",statusString);
+    
 }
 
 
@@ -105,14 +108,9 @@ void loop()
     //counter to allow us to only check the temp every so often
     static int wait = 0;
     
-    static int firstTimeOn = 1;
-    
     int tempReading = 0;
     double voltage = 0.0;
-    
-
-    
-    
+  
     //only check & update temp every so often
     if (!wait)
     {
@@ -158,12 +156,6 @@ void loop()
         
     //logging result for Google
     sprintf(logResult, "{\"id\":%d,\"team\":\"%s\",\"c_tmp\":%d,\"bcg_status\":\"%s\",\"status\":\"%s\"}", core_id, teamName, currentTemperature, bcgStatus, thermostatStatus ? "on" : "off");
-    
-    if (firstTimeOn == 1) {
-        sprintf(statusString, "{\"id\":%d,\"team\":\"%s\",\"bcg_status\":\"%s\"}", core_id, teamName, bcgStatus);
-        Spark.publish("bcg-status",statusString);
-        firstTimeOn = 0;
-    }
     
     --wait;
 }

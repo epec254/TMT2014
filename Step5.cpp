@@ -173,6 +173,9 @@ void setup()
     //default LEDs to off
     digitalWrite(COOL_LED,LOW);
     digitalWrite(HEAT_LED,LOW);
+    
+    sprintf(statusString, "{\"id\":%d,\"team\":\"%s\",\"bcg_status\":\"%s\"}", core_id, teamName, bcgStatus);
+    Spark.publish("bcg-status",statusString);
 }
 
 
@@ -320,13 +323,7 @@ void loop()
     
     //logging result for Google
     sprintf(logResult, "{\"id\":%d,\"team\":\"%s\",\"c_tmp\":%d,\"d_tmp\":%d,\"motion\":\"%s\",\"heat\":\"%s\",\"cool\":\"%s\",\"status\":\"%s\",\"last_motion\":%d,\"bcg_status\":\"%s\"}", core_id, teamName, currentTemperature, desiredTemperature, ((millis() - lastMotionSensed) < 5000UL)  ? "true" : "false", isHeatOn ? "true" : "false", isCoolOn ? "true" : "false", thermostatStatus ? "on" : "off", lastMotionTimeStamp, bcgStatus);
-    
-    if (firstTimeOn == 1) {
-        //placeholder for first time on
-        sprintf(statusString, "{\"id\":%d,\"team\":\"%s\",\"bcg_status\":\"%s\"}", core_id, teamName, bcgStatus);
-        Spark.publish("bcg-status",statusString);
-        firstTimeOn = 0;
-    }
+
     
     --wait;
 }

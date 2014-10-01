@@ -28,6 +28,9 @@ void setup()
     Serial.begin(9600);
     
     pinMode(D7, OUTPUT);
+    
+    sprintf(statusString, "{\"id\":%d,\"team\":\"%s\",\"bcg_status\":\"%s\"}", core_id, teamName, bcgStatus);
+    Spark.publish("bcg-status",statusString);
 }
 
 
@@ -37,21 +40,13 @@ void loop()
     //counter to allow us to only check the temp every so often
     static int wait = 0;
     
-    //DO NOT CHANGE
-    static int firstTimeOn = 1;
+ 
     digitalWrite(D7, HIGH);   // Turn ON the LED
 
     
     //logging result for Google
     //TODO: Check if Google doc can read this partial set of strings
     sprintf(logResult, "{\"id\":%d,\"team\":\"%s\",\"bcg_status\":\"%s\",\"status\":\"%s\"}", core_id, teamName, bcgStatus, thermostatStatus ? "on" : "off");
-    
-    if (firstTimeOn == 1) {
-        sprintf(statusString, "{\"id\":%d,\"team\":\"%s\",\"bcg_status\":\"%s\"}", core_id, teamName, bcgStatus);
-        Spark.publish("bcg-status",statusString);
-       
-        firstTimeOn = 0;
-    }
     
     --wait;
 }

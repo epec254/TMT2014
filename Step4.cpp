@@ -140,6 +140,10 @@ void setup()
     //default LEDs to off
     digitalWrite(COOL_LED,LOW);
     digitalWrite(HEAT_LED,LOW);
+    
+    sprintf(statusString, "{\"id\":%d,\"team\":\"%s\",\"bcg_status\":\"%s\"}", core_id, teamName, bcgStatus);
+    Spark.publish("bcg-status",statusString);
+    //setTemperature(25);
 }
 
 
@@ -148,9 +152,7 @@ void loop()
 {
     //counter to allow us to only check the temp every so often
     static int wait = 0;
-    
-   	static int firstTimeOn = 1;
-    
+
     int tempReading = 0;
     double voltage = 0.0;
     
@@ -259,14 +261,6 @@ void loop()
     
     //logging result for Google
     sprintf(logResult, "{\"id\":%d,\"team\":\"%s\",\"c_tmp\":%d,\"d_tmp\":%d,\"heat\":\"%s\",\"cool\":\"%s\",\"status\":\"%s\",\"bcg_status\":\"%s\"}", core_id, teamName, currentTemperature, desiredTemperature, isHeatOn ? "true" : "false", isCoolOn ? "true" : "false", thermostatStatus ? "on" : "off", bcgStatus);
-    
-    if (firstTimeOn == 1) {
-        //placeholder for first time on
-        sprintf(statusString, "{\"id\":%d,\"team\":\"%s\",\"bcg_status\":\"%s\"}", core_id, teamName, bcgStatus);
-        Spark.publish("bcg-status",statusString);
-         setTemperature(25);
-        firstTimeOn = 0;
-    }
     
     --wait;
 }
