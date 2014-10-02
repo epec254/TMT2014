@@ -143,7 +143,7 @@ void setup()
     
     sprintf(statusString, "{\"id\":%d,\"team\":\"%s\",\"bcg_status\":\"%s\"}", core_id, teamName, bcgStatus);
     Spark.publish("bcg-status",statusString);
-    //setTemperature(25);
+    setTemperature(25);
 }
 
 
