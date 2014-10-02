@@ -174,7 +174,7 @@ void setup()
     digitalWrite(COOL_LED,LOW);
     digitalWrite(HEAT_LED,LOW);
     
-    sprintf(statusString, "{\"id\":%d,\"team\":\"%s\",\"bcg_status\":\"%s\"}", core_id, teamName, bcgStatus);
+    sprintf(statusString, "{\"id\":%d,\"team\":\"%s\",\"bcg_status\":\"%s\",\"time\":%d}", core_id, teamName, bcgStatus, millis());
     Spark.publish("bcg-status",statusString);
 }
 
